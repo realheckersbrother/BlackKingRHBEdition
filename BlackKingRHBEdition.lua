@@ -51,52 +51,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 local Success = pcall(function()
 	Instance.new("Part"):iIIiiIIilIliLiLilIiIIilIliLiLilIilillIliLiLilIil("a")
 end)
@@ -179,7 +133,7 @@ local v6 = u2:CreateWindow({
     TabPadding = 5,
     MenuFadeTime = 0.2,
 })
-local v7 = false
+local v7 = true
 
 _G.Remote = 'RemotesFolder'
 
@@ -529,12 +483,14 @@ local function u29(p25, p26, p27)
     Instance.new('UIStroke', _TextLabel)
 end
 
-local v30 = game.Players.LocalPlayer.Character.Collision:Clone()
+if game.Players.LocalPlayer.Character:FindFirstChild("Collision") then
+local v30 = game.Players.LocalPlayer.Character:FindFirstChild("Collision"):Clone()
 
 v30.CanCollide = false
 v30.Name = 'DumbCollision'
 v30.Massless = true
 v30.Parent = game.Players.LocalPlayer.Character
+end
 
 if game:GetService('ReplicatedStorage').GameData.Floor.Value == 'Hotel' or game:GetService('ReplicatedStorage').GameData.Floor.Value == 'Mines' then
     game:GetService('ProximityPromptService').PromptTriggered:Connect(function(p31, p32)
@@ -930,11 +886,13 @@ game:GetService('RunService').RenderStepped:Connect(function()
         if _G.Noclip then
             task.spawn(function()
                 if not _G.StopLag then
+                    if game.Players.LocalPlayer.Character then
                     game.Players.LocalPlayer.Character.Collision.CanCollide = false
                     game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = false
                     game.Players.LocalPlayer.Character.LowerTorso.CanCollide = false
                     game.Players.LocalPlayer.Character.UpperTorso.CanCollide = false
                     game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = false
+                    end
                 end
             end)
         end
@@ -1955,9 +1913,21 @@ end
                                                         while true do
                                                             task.wait(0.1)
 
-                                                            if _LocalPlayer:DistanceFromCharacter(p144.PrimaryPart.Position) <= 12 then
-                                                                fireproximityprompt(_LootPrompt)
-                                                            end
+local player = game.Players.LocalPlayer
+
+if player and player.Character and p144 and p144.PrimaryPart and _LootPrompt then
+    local character = player.Character
+    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+
+    if humanoidRootPart then
+        local distance = (humanoidRootPart.Position - p144.PrimaryPart.Position).Magnitude
+
+        if distance <= 12 then
+            fireproximityprompt(_LootPrompt)
+        end
+    end
+end
+
                                                             if _LootPrompt:GetAttribute('Interactions') or not _G.AutoLoot then
                                                                 return
                                                             end
@@ -4064,8 +4034,12 @@ end
 
             u14.Entity = false
 
-            v409:Disconnect()
-            v416:Disconnect()
+            if v409 and typeof(v409) == "RBXScriptConnection" then
+                v409:Disconnect()
+            end
+            if v416 and typeof(v416) == "RBXScriptConnection" then
+                v416:Disconnect()
+            end          
         end
     end,
 })
@@ -5714,7 +5688,9 @@ if v7 then
                 IgnoreList = {},
             }
 
-            loadstring(game:HttpGet('https://raw.githubusercontent.com/RegularVynixu/Utilities/refs/heads/main/Doors/Crucifix%20Everything/Source.lua'))().GiveCrucifix(v606)
+            loadstring(game:HttpGet('https://raw.githubusercontent.com/RegularVynixu/Utilities/refs/heads/main/Doors/Crucifix%20Everything/Source.lua'))()
+            
+            getgenv().Vynixu_Crucifix_Everything:GiveCrucifix(v606)
         end,
         DoubleClick = false,
         Tooltip = 'Get Crucifix',
