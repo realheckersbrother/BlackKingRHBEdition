@@ -1,4 +1,76 @@
--- do NOT scroll down.
+-- do NOT scroll down
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -111,6 +183,9 @@ local v3 = loadstring(game:HttpGet(v1 .. 'ThemeManager'))()
 local v4 = loadstring(game:HttpGet(v1 .. 'SaveManager'))()
 local assets = game.workspace.CurrentRooms[tostring(game:GetService('ReplicatedStorage').GameData.LatestRoom.Value)]:WaitForChild('Assets')
 
+-- in doors- is ClientModules.
+local ModulesClient = game:GetService("ReplicatedStorage"):FindFirstChild("ModulesClient") or game:GetService("ReplicatedStorage"):FindFirstChild("ClientModules")
+
 u2:Notify('BlackKing (RHB Edition) : Loading Gui')
 wait(0.5)
 u2:Notify('Welcome to BlackKing (RHB Edition) ' .. game.Players.LocalPlayer.DisplayName)
@@ -136,6 +211,21 @@ local v6 = u2:CreateWindow({
 local v7 = true
 
 _G.Remote = 'RemotesFolder'
+
+local DoorsMinus = false
+local SuperHardMode = false
+
+if game:GetService('ReplicatedStorage').GameData.Floor.Value == 'Fools' or _G.SuperHardMode then
+    SuperHardMode = true
+    game:GetService('ReplicatedStorage').GameData.Floor.Value = 'Hotel'
+end
+
+_G.SuperHardMode = SuperHardMode
+_G.DoorsMinus = DoorsMinus
+
+if DoorsMinus or SuperHardMode then
+    _G.Remote = 'Bricks'	
+end
 
 local _LocalPlayer = game.Players.LocalPlayer
 local u9 = _LocalPlayer.Character or _LocalPlayer.CharacterAdded:Wait()
@@ -250,6 +340,7 @@ local function u13()
     _G.SeekBypass = false
     _G.BypassEyes = false
     _G.BypassScreech = false
+    _G.BypassA60 = false
     _G.BypassHalte = false
     _G.ShowKb = false
     _G.Highlight = false
@@ -317,6 +408,7 @@ local function u13()
     _G.Chata120 = 'A120 Has Spawn'
     _G.ChatBlitz = 'Blitz Has Spawn'
     _G.ChatLookman = 'Lookman has Spawn Avoid looking at it'
+    _G.AntiCheatNew = false
 end
 
 u13()
@@ -687,8 +779,8 @@ game:GetService('RunService').RenderStepped:Connect(function()
         if _G.BypassHalte then
             task.spawn(function()
                 if not _G.StopLag then
-                    if game:GetService('ReplicatedStorage').ModulesClient.EntityModules:FindFirstChild('Shade') then
-                        game:GetService('ReplicatedStorage').ModulesClient.EntityModules.Shade.Name = 'Shade_Dumb'
+                    if ModulesClient.EntityModules:FindFirstChild('Shade') then
+                        ModulesClient.EntityModules.Shade.Name = 'Shade_Dumb'
                     end
                 end
             end)
@@ -714,8 +806,8 @@ game:GetService('RunService').RenderStepped:Connect(function()
         if _G.Glitch then
             task.spawn(function()
                 if not _G.StopLag then
-                    if game:GetService('ReplicatedStorage').ModulesClient.EntityModules:FindFirstChild('Glitch') then
-                        game:GetService('ReplicatedStorage').ModulesClient.EntityModules.Glitch.Name = 'Glitch_Dumb'
+                    if ModulesClient.EntityModules:FindFirstChild('Glitch') then
+                        ModulesClient.EntityModules.Glitch.Name = 'Glitch_Dumb'
                     end
                 end
             end)
@@ -723,8 +815,8 @@ game:GetService('RunService').RenderStepped:Connect(function()
         if _G.Void then
             task.spawn(function()
                 if not _G.StopLag then
-                    if game:GetService('ReplicatedStorage').ModulesClient.EntityModules:FindFirstChild('Void') then
-                        game:GetService('ReplicatedStorage').ModulesClient.EntityModules.Void.Name = 'Void_Dumb'
+                    if ModulesClient.EntityModules:FindFirstChild('Void') then
+                        ModulesClient.EntityModules.Void.Name = 'Void_Dumb'
                     end
                 end
             end)
@@ -734,6 +826,7 @@ game:GetService('RunService').RenderStepped:Connect(function()
                 if not _G.StopLag then
                     local v41 = false
 
+                    if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid").Health ~= 0 then
                     game.Players.LocalPlayer.Character.Head.Massless = v41
                     game.Players.LocalPlayer.Character.LeftFoot.Massless = v41
                     game.Players.LocalPlayer.Character.LeftHand.Massless = v41
@@ -749,6 +842,7 @@ game:GetService('RunService').RenderStepped:Connect(function()
                     game.Players.LocalPlayer.Character.RightUpperArm.Massless = v41
                     game.Players.LocalPlayer.Character.RightUpperLeg.Massless = v41
                     game.Players.LocalPlayer.Character.UpperTorso.Massless = v41
+                    end
                 end
             end)
         end
@@ -776,11 +870,15 @@ game:GetService('RunService').RenderStepped:Connect(function()
         end
         if _G.Godmode then
             task.spawn(function()
-                game.Players.LocalPlayer.Character.Collision.CanCollide = false
+            if game.Players.LocalPlayer.Character:FindFirstChild("Collision") then
+
+                game.Players.LocalPlayer.Character:FindFirstChild("Collision").CanCollide = false
+                end
                 game.Players.LocalPlayer.Character.LowerTorso.CanCollide = false
                 game.Players.LocalPlayer.Character.UpperTorso.CanCollide = false
-
+                if not SuperHardMode then
                 game:GetService('ReplicatedStorage')[_G.Remote].Crouch:FireServer(true)
+                end
                 game.Players.LocalPlayer.Character:SetAttribute('Crouching', false)
             end)
         end
@@ -876,8 +974,10 @@ game:GetService('RunService').RenderStepped:Connect(function()
         if _G.figureheard then
             task.spawn(function()
                 if not _G.StopLag then
-                    if game.workspace.CurrentRooms[game.Players.LocalPlayer:GetAttribute('CurrentRoom')]:FindFirstChild('FigureSetup') then
-                        game:GetService('ReplicatedStorage')[_G.Remote].Crouch:FireServer(true)
+                    if game.workspace.CurrentRooms:FindFirstChild(game.Players.LocalPlayer:GetAttribute('CurrentRoom')):FindFirstChild('FigureSetup') then
+                                        if not SuperHardMode then
+game:GetService('ReplicatedStorage')[_G.Remote].Crouch:FireServer(true)
+end
                         game.Players.LocalPlayer.Character:SetAttribute('Crouching', false)
                     end
                 end
@@ -886,9 +986,13 @@ game:GetService('RunService').RenderStepped:Connect(function()
         if _G.Noclip then
             task.spawn(function()
                 if not _G.StopLag then
-                    if game.Players.LocalPlayer.Character then
-                    game.Players.LocalPlayer.Character.Collision.CanCollide = false
-                    game.Players.LocalPlayer.Character.Collision.CollisionCrouch.CanCollide = false
+                    if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid").Health ~= 0 then
+                                if game.Players.LocalPlayer.Character:FindFirstChild("Collision") then
+                    game.Players.LocalPlayer.Character:FindFirstChild("Collision").CanCollide = false
+if not DoorsMinus then
+                    game.Players.LocalPlayer.Character:FindFirstChild("Collision"):FindFirstChild("CollisionCrouch").CanCollide = false
+                    end
+                    end
                     game.Players.LocalPlayer.Character.LowerTorso.CanCollide = false
                     game.Players.LocalPlayer.Character.UpperTorso.CanCollide = false
                     game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = false
@@ -1489,7 +1593,7 @@ _LocalPlayer2:AddSlider('SpeedBoostSlie', {
     Text = 'Speed Boost ',
     Default = 6,
     Min = 1,
-    Max = 6,
+    Max = 35,
     Rounding = 0,
     Compact = true,
     Callback = function(p116)
@@ -1543,6 +1647,7 @@ _LocalPlayer2:AddToggle('Acceleration', {
 
         if _G.noAcceleration == false then
             local v121 = true
+                    if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid").Health ~= 0 then
 
             game.Players.LocalPlayer.Character.Head.Massless = v121
             game.Players.LocalPlayer.Character.LeftFoot.Massless = v121
@@ -1559,6 +1664,7 @@ _LocalPlayer2:AddToggle('Acceleration', {
             game.Players.LocalPlayer.Character.RightUpperArm.Massless = v121
             game.Players.LocalPlayer.Character.RightUpperLeg.Massless = v121
             game.Players.LocalPlayer.Character.UpperTorso.Massless = v121
+            end
         end
     end,
 })
@@ -1570,7 +1676,10 @@ _LocalPlayer2:AddToggle('Noclip', {
         _G.Noclip = p122
 
         if _G.Noclip == false then
-            game.Players.LocalPlayer.Character.Collision.CanCollide = true
+                                        if game.Players.LocalPlayer.Character:FindFirstChild("Collision") then
+
+            game.Players.LocalPlayer.Character:FindFirstChild("Collision").CanCollide = true
+            end
             game.Players.LocalPlayer.Character.LowerTorso.CanCollide = true
             game.Players.LocalPlayer.Character.UpperTorso.CanCollide = true
             game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = true
@@ -1617,6 +1726,37 @@ if game:GetService('ReplicatedStorage').GameData.Floor.Value == 'Mines' then
         NoUI = false,
     })
 end
+
+_LocalPlayer2:AddButton({
+    Text = 'Anti afk',
+    Func = function()
+	if getconnections then
+		for _, connection in pairs(getconnections(game:GetService("Players").LocalPlayer.Idled)) do
+			if connection["Disable"] then
+				connection["Disable"](connection)
+			elseif connection["Disconnect"] then
+				connection["Disconnect"](connection)
+			end
+		end
+	else
+		game:GetService("Players").LocalPlayer.Idled:Connect(function()
+			game:GetService("VirtualUser"):CaptureController()
+			game:GetService("VirtualUser"):ClickButton2(Vector2.new())
+		end)
+	end
+    end,
+    DoubleClick = true,
+    Tooltip = 'Anti afk',
+})
+
+_LocalPlayer2:AddButton({
+    Text = 'Auto farm',
+    Func = function()
+	    loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/6e87698669de88a8f81d6348ce368b73.lua"))()
+    end,
+    DoubleClick = true,
+    Tooltip = 'You can afk but press anti afk!',
+})
 
 local _Camera = v113:AddTab('Camera')
 
@@ -1754,8 +1894,10 @@ _Game:AddToggle('Godmode', {
                 u14.Godmode = true
 
                 u2:Notify('GodMode = true!')
+                                        if game.Players.LocalPlayer.Character:FindFirstChild("Collision") then
 
-                game.Players.LocalPlayer.Character.Collision.CanCollide = false
+                game.Players.LocalPlayer.Character:FindFirstChild("Collision").CanCollide = false
+                end
                 game.Players.LocalPlayer.Character.LowerTorso.CanCollide = false
                 game.Players.LocalPlayer.Character.UpperTorso.CanCollide = false
 
@@ -1767,8 +1909,10 @@ _Game:AddToggle('Godmode', {
             u14.Godmode = false
 
             u2:Notify('GodMode = false!')
+                                        if game.Players.LocalPlayer.Character:FindFirstChild("Collision") then
 
-            game.Players.LocalPlayer.Character.Collision.CanCollide = true
+            game.Players.LocalPlayer.Character:FindFirstChild("Collision").CanCollide = true
+            end
             game.Players.LocalPlayer.Character.LowerTorso.CanCollide = true
             game.Players.LocalPlayer.Character.UpperTorso.CanCollide = true
 
@@ -2417,8 +2561,8 @@ if game:GetService('ReplicatedStorage').GameData.Floor.Value == 'Mines' or (game
             Callback = function(p225)
                 _G.BypassHalte = p225
 
-                if _G.BypassHalte == false and game:GetService('ReplicatedStorage').ModulesClient.EntityModules:FindFirstChild('Shade_Dumb') then
-                    game:GetService('ReplicatedStorage').ModulesClient.EntityModules.Shade_Dumb.Name = 'Shade'
+                if _G.BypassHalte == false and ModulesClient.EntityModules:FindFirstChild('Shade_Dumb') then
+                    ModulesClient.EntityModules.Shade_Dumb.Name = 'Shade'
                 end
             end,
         })
@@ -2495,8 +2639,8 @@ _Jumpscare:AddToggle('Glitch', {
     Callback = function(p235)
         _G.Glitch = p235
 
-        if _G.Glitch == false and game:GetService('ReplicatedStorage').ModulesClient.EntityModules:FindFirstChild('Glitch_Dumb') then
-            game:GetService('ReplicatedStorage').ModulesClient.EntityModules.Glitch_Dumb.Name = 'Glitch'
+        if _G.Glitch == false and ModulesClient.EntityModules:FindFirstChild('Glitch_Dumb') then
+            ModulesClient.EntityModules.Glitch_Dumb.Name = 'Glitch'
         end
     end,
 })
@@ -2507,8 +2651,8 @@ _Jumpscare:AddToggle('Void', {
     Callback = function(p236)
         _G.Void = p236
 
-        if _G.Void == false and game:GetService('ReplicatedStorage').ModulesClient.EntityModules:FindFirstChild('Void_Dumb') then
-            game:GetService('ReplicatedStorage').ModulesClient.EntityModules.Void_Dumb.Name = 'Void'
+        if _G.Void == false and ModulesClient.EntityModules:FindFirstChild('Void_Dumb') then
+            ModulesClient.EntityModules.Void_Dumb.Name = 'Void'
         end
     end,
 })
@@ -2933,7 +3077,7 @@ v255:AddToggle('Doorsesp', {
                     local v273 = game.workspace.CurrentRooms[game:GetService('ReplicatedStorage').GameData.LatestRoom.Value + 1]
 
                     task.wait(0.1)
-
+                    if not SuperHardMode then
                     if v272.Door:FindFirstChild('Lock') then
                         if game:GetService('ReplicatedStorage').GameData.Floor.Value ~= 'Mines' then
                             local v274 = v273:GetAttribute('RawName'):gsub(game:GetService('ReplicatedStorage').GameData.Floor.Value .. '_', '') .. ' | ' .. game:GetService('ReplicatedStorage').GameData.LatestRoom.Value + 1 .. ' [Lock]'
@@ -2953,6 +3097,7 @@ v255:AddToggle('Doorsesp', {
 
                         u29(v272.Door.Door, v277, _G.DoorsColor)
                     end
+end
                 end
             end)
         end
@@ -4487,7 +4632,7 @@ _Bypass:AddToggle('BypassSpeed', {
     Callback = function(p480)
         _G.AntiCheat = p480
 
-        if _G.AntiCheat then
+        if _G.AntiCheat or _G.AntiCheatNew then
             Options.SpeedBoostSlie:SetMax(35)
         else
             Options.SpeedBoostSlie:SetMax(6)
@@ -4509,6 +4654,70 @@ _Bypass:AddToggle('BypassSpeed', {
     end,
 })
 
+local antiSpeedEnabled = false
+local antiSpeedLoop
+local clonedCollision
+
+_Bypass:AddToggle('NewBypassSpeed', {
+    Text = '(NEW) Bypass Speed Anti Cheat',
+    Default = false,
+    Tooltip = '(NEW) Bypass Speed Anti Cheat',
+    Callback = function(enabled)
+        _G.AntiCheatNew = enabled
+        if _G.AntiCheatNew then
+            Options.SpeedBoostSlie:SetMax(35)
+        else
+            Options.SpeedBoostSlie:SetMax(6)
+
+            _G.SelectBoots = 6
+        end
+        antiSpeedEnabled = enabled
+        
+        if enabled then
+            pcall(function()
+                local Players = game:GetService("Players")
+                local LocalPlayer = Players.LocalPlayer or Players.PlayerAdded:Wait()
+                local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+                local CollisionPart = Character:WaitForChild("CollisionPart")
+                
+                clonedCollision = CollisionPart:Clone()
+                clonedCollision.Name = "_CollisionClone"
+                clonedCollision.Massless = true
+                clonedCollision.Parent = Character
+                clonedCollision.CanCollide = false
+                clonedCollision.CanQuery = false
+                clonedCollision.CustomPhysicalProperties = PhysicalProperties.new(0.01, 0.7, 0, 1, 1)
+                
+                antiSpeedLoop = task.spawn(function()
+                    while antiSpeedEnabled do
+                        task.wait(0.23)
+                        if clonedCollision then
+                            clonedCollision.Massless = false
+                            task.wait(0.23)
+                            local root = Character:FindFirstChild("HumanoidRootPart")
+                            if root and root.Anchored then
+                                clonedCollision.Massless = true
+                                task.wait(1)
+                            end
+                            clonedCollision.Massless = true
+                        end
+                    end
+                end)
+            end)
+        else
+            antiSpeedEnabled = false
+            if antiSpeedLoop then
+                task.cancel(antiSpeedLoop)
+                antiSpeedLoop = nil
+            end
+            if clonedCollision then
+                clonedCollision:Destroy()
+                clonedCollision = nil
+            end
+        end
+    end,
+})
+
 if game:GetService('ReplicatedStorage').GameData.Floor.Value == 'Mines' or game:GetService('ReplicatedStorage').GameData.Floor.Value == 'Hotel' then
     local _Lag = v475:AddTab('Lag')
 
@@ -4516,7 +4725,7 @@ if game:GetService('ReplicatedStorage').GameData.Floor.Value == 'Mines' or game:
         _Lag:AddToggle('AntilagSeek', {
             Text = 'Anti Lag Seek Chase',
             Default = false,
-            Tooltip = 'Anti Lag On Seek Chase',
+            Tooltip = 'Disables alot of features aswell.',
             Callback = function(p482)
                 _G.AntiLagSeek = p482
 
@@ -4565,7 +4774,7 @@ _Notification:AddToggle('EventNotify', {
                                                 if p486.Name ~= 'BackdoorRush' then
                                                     if p486.Name ~= 'BackdoorLookman' then
                                                         if _G.LibraryNotification == true then
-                                                            u2:Notify('[Event Notification] : something Is Coming [Error]')
+                                                            u2:Notify('[Event Notification] : Something is coming that is unknown.')
 
                                                             local _Sound10 = Instance.new('Sound')
 
@@ -4577,13 +4786,13 @@ _Notification:AddToggle('EventNotify', {
                                                             _Sound10:Destroy()
                                                         end
                                                         if _G.CaptionNotification == true then
-                                                            _G.CaptionText = 'something Is Coming [Error]'
+                                                            _G.CaptionText = 'Something is coming that is unknown.'
 
                                                             u20()
                                                         end
                                                     else
                                                         if _G.LibraryNotification == true then
-                                                            u2:Notify('[Event Notifier] : Lookman Is Coming Find Hide Spot!')
+                                                            u2:Notify('[Event Notifier] : Lookman is here dont look at him')
 
                                                             local _Sound11 = Instance.new('Sound')
 
@@ -4598,7 +4807,7 @@ _Notification:AddToggle('EventNotify', {
                                                             game:GetService('TextChatService').TextChannels.RBXGeneral:SendAsync(_G.ChatLookman)
                                                         end
                                                         if _G.CaptionNotification == true then
-                                                            _G.CaptionText = 'Lookman Is Coming Find Hide Spot!'
+                                                            _G.CaptionText = 'Lookman is here dont look at him'
 
                                                             u20()
                                                         end
@@ -5002,7 +5211,7 @@ _ItemShop:AddDivider()
 _ItemShop:AddButton({
     Text = 'Buy Select Items',
     Func = function()
-        local _Itemshop = _G.Itemshop
+        --[[local _Itemshop = _G.Itemshop
         local _ItemNumber = _G.ItemNumber
         local v520 = {}
         local v521 = 1
@@ -5015,7 +5224,21 @@ _ItemShop:AddButton({
 
         game:GetService('ReplicatedStorage')[_G.Remote].PreRunShop:FireServer({
             unpack(v520),
-        })
+        })]]
+        local _Itemshop = _G.Itemshop
+        local _ItemNumber = _G.ItemNumber
+        local Items = {}
+
+        for i = 1, _ItemNumber do
+            table.insert(Items, _Itemshop)
+        end
+
+        local args = {
+            Items, 
+            false
+        }
+
+        game:GetService("ReplicatedStorage"):WaitForChild("RemotesFolder"):WaitForChild("PreRunShop"):FireServer(unpack(args))
     end,
     DoubleClick = false,
     Tooltip = 'Buy Select Items',
@@ -5224,7 +5447,7 @@ if game:GetService('ReplicatedStorage').GameData.Floor.Value == 'Mines' then
             fireproximityprompt(game.workspace.CurrentRooms['100']._DamHandler._OutsideCutscene.DungeonDoor.DoubleDoors.ActivateEventPrompt)
         end,
         DoubleClick = false,
-        Tooltip = 'Need Byass anti cheat',
+        Tooltip = 'Need bypass anti cheat',
     })
 end
 
